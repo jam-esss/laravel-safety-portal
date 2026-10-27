@@ -20,7 +20,7 @@ return new class extends Migration {
             $table->boolean('is_required')->default(true);
             $table->timestamps();
 
-            $table->unique(['document_template_id', 'placeholder']);
+            $table->unique(['document_template_id', 'placeholder'], 'dtv_template_placeholder_unique');
         });
     }
 
