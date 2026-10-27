@@ -4,8 +4,12 @@ use Illuminate\Support\Facades\Route;
 
 Route::redirect('/', '/login')->name('home');
 
-Route::middleware(['auth', 'verified'])->group(function () {
-    Route::inertia('dashboard', 'dashboard')->name('dashboard');
+Route::middleware(['auth', 'verified'])->name('client.')->group(function () {
+    require __DIR__ . '/client.php';
 });
 
-require __DIR__.'/settings.php';
+Route::middleware(['auth', 'verified'])->name('office.')->prefix('office')->group(function () {
+    require __DIR__ . '/office.php';
+});
+
+require __DIR__ . '/settings.php';
