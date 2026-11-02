@@ -14,6 +14,8 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 WORKDIR /app
 COPY . .
 RUN cp .env.example .env
+RUN mkdir -p bootstrap/cache storage/framework/cache storage/framework/sessions storage/framework/views storage/logs \
+    && chmod -R 777 bootstrap/cache storage
 RUN composer install --no-interaction --prefer-dist
 RUN php artisan key:generate
 RUN npm ci && npm run build
@@ -37,6 +39,7 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 WORKDIR /var/www/html
 COPY . .
 COPY --from=assets /app/public/build ./public/build
+RUN mkdir -p bootstrap/cache storage/framework/cache storage/framework/sessions storage/framework/views storage/logs
 
 RUN composer install --no-dev --optimize-autoloader --no-interaction \
     && chown -R www-data:www-data storage bootstrap/cache
