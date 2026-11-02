@@ -16,6 +16,7 @@ import {
 import {dashboard} from '@/routes/client';
 import {index as documentsIndex} from '@/routes/client/templates';
 import type { NavItem } from '@/types';
+import FlashToaster from "@/components/flash-toaster";
 
 const mainNavItems: NavItem[] = [
     {
@@ -66,6 +67,8 @@ export function AppSidebar() {
                 <NavFooter items={footerNavItems} className="mt-auto" />
                 <NavUser />
             </SidebarFooter>
+
+            <FlashToaster />
         </Sidebar>
     );
 }
