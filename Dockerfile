@@ -1,5 +1,5 @@
 # ---------- Stage 1: build the React frontend ----------
-FROM php:8.3-cli AS assets
+FROM php:8.5-cli AS assets
 
 ADD https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
 RUN chmod +x /usr/local/bin/install-php-extensions \
@@ -19,7 +19,7 @@ RUN php artisan key:generate
 RUN npm ci && npm run build
 
 # ---------- Stage 2: the container that runs the site ----------
-FROM php:8.3-apache
+FROM php:8.5-apache
 
 ADD https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
 RUN chmod +x /usr/local/bin/install-php-extensions \
