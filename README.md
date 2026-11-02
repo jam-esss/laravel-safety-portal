@@ -39,6 +39,13 @@ Command: run
 Scripts: dev
 ```
 
+```
+Shell Script
+Script Text: .\mailpit.exe
+Working Directory: C:\mailpit
+[x] Execute in the terminal
+```
+
 ## 📷 Screenshots
 
 ## ✍️ Authors
