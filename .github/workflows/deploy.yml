@@ -2,11 +2,13 @@ name: Deploy
 
 on:
   push:
-    branches: [main]
+    branches: [master]
+  workflow_dispatch:
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
     steps:
       - name: Deploy to VPS over SSH
         uses: appleboy/ssh-action@v1
@@ -15,10 +17,13 @@ jobs:
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_KEY }}
           script_stop: true
+          command_timeout: 30m
           script: |
+            set -e
             cd ~/vigil/app
-            git pull origin main
+            git pull origin master
             cd ~/vigil
             docker compose up -d --build
             docker compose exec -T vigil php artisan migrate --force
             docker image prune -f
+            echo "Deployment successful!"
