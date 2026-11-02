@@ -13,7 +13,18 @@ type Template = {
     updated_at: string;
 };
 
-export default function Index({templates}: { templates: Template[] }) {
+type Option = {
+    value: string;
+    label: string;
+};
+
+export default function Index({templates, documentTypes,}: {
+    templates: Template[];
+    documentTypes: Option[];
+}) {
+    const typeLabel = (value: string) =>
+        documentTypes.find((type) => type.value === value)?.label ?? value;
+
     return (
         <>
             <Head title="Templates"/>
@@ -46,7 +57,7 @@ export default function Index({templates}: { templates: Template[] }) {
                                 {template.name}
                             </p>
                             <p className="text-sm text-gray-600">
-                                {template.document_type}
+                                {typeLabel(template.document_type)}
                             </p>
                             <p className="text-sm text-gray-600">
                                 {template.variables_count} variables

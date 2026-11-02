@@ -1,8 +1,23 @@
 import { Head, useForm } from '@inertiajs/react';
 import type { SubmitEvent } from 'react';
-import {index as templateIndex, update} from '@/routes/client/templates';
-import {Button} from "@/components/ui/button";
-import Create from "@/pages/client/templates/create";
+import InputError from '@/components/input-error';
+import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
+import { index as templateIndex, update } from '@/routes/client/templates';
+
+type Option = {
+    value: string;
+    label: string;
+};
 
 type Variable = {
     id: number;
@@ -19,12 +34,17 @@ type Template = {
     variables: Variable[];
 };
 
-export default function Edit({ template }: { template: Template }) {
+export default function Edit({
+                                 template,
+                                 dataTypes,
+                             }: {
+    template: Template;
+    dataTypes: Option[];
+}) {
     const { data, setData, put, processing, errors } = useForm({
         variables: template.variables,
     });
 
-    // Change one field on one variable, leaving the others untouched
     function change(index: number, field: keyof Variable, value: string | boolean) {
         setData(
             'variables',
@@ -45,89 +65,72 @@ export default function Edit({ template }: { template: Template }) {
             <Head title={`Edit ${template.name}`} />
 
             <form onSubmit={submit} className="space-y-4 p-6">
-                <h1 className="text-2xl font-semibold">
-                    Edit {template.name}
-                </h1>
+                <h1 className="text-2xl font-semibold">Edit {template.name}</h1>
 
                 {data.variables.map((variable, index) => (
                     <div
                         key={variable.id}
-                        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 rounded border p-3"
+                        className="grid grid-cols-1 gap-4 rounded border p-3 md:grid-cols-2 lg:grid-cols-3"
                     >
                         <p className="col-span-full font-mono text-sm text-primary">
                             {'${' + variable.placeholder + '}'}
                         </p>
 
-                        <div>
-                            <label className="block text-sm mb-1 font-medium">
-                                Title
-                            </label>
-                            <input
-                                type="text"
+                        <div className="grid gap-2">
+                            <Label htmlFor={`title-${variable.id}`}>Title</Label>
+                            <Input
+                                id={`title-${variable.id}`}
                                 value={variable.title}
                                 onChange={(e) => change(index, 'title', e.target.value)}
-                                className="w-full rounded border p-2"
-                                placeholder={'${' + variable.placeholder + '}'}
                             />
-                            {errorFor(index, 'title') && (
-                                <p className="text-sm text-red-600">
-                                    {errorFor(index, 'title')}
-                                </p>
-                            )}
+                            <InputError message={errorFor(index, 'title')} />
                         </div>
 
-                        <div>
-                            <label className="block text-sm mb-1 font-medium">
-                                Description
-                            </label>
-                            <input
-                                type="text"
+                        <div className="grid gap-2">
+                            <Label htmlFor={`description-${variable.id}`}>Description</Label>
+                            <Input
+                                id={`description-${variable.id}`}
                                 value={variable.description ?? ''}
                                 onChange={(e) => change(index, 'description', e.target.value)}
-                                className="w-full rounded border p-2"
                                 placeholder="What is the variable for?"
                             />
-                            {errorFor(index, 'description') && (
-                                <p className="text-sm text-red-600">
-                                    {errorFor(index, 'description')}
-                                </p>
-                            )}
+                            <InputError message={errorFor(index, 'description')} />
                         </div>
 
-                        <div>
-                            <label className="block text-sm mb-1 font-medium">
-                                Data type
-                            </label>
-                            <select
+                        <div className="grid gap-2">
+                            <Label htmlFor={`data-type-${variable.id}`}>Data type</Label>
+                            <Select
                                 value={variable.data_type}
-                                onChange={(e) => change(index, 'data_type', e.target.value)}
-                                className="w-full rounded border p-2"
+                                onValueChange={(value) => change(index, 'data_type', value)}
                             >
-                                <option value="text">Text</option>
-                                <option value="textarea">Long Text</option>
-                                <option value="number">Number</option>
-                                <option value="date">Date</option>
-                            </select>
+                                <SelectTrigger id={`data-type-${variable.id}`}>
+                                    <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {dataTypes.map((type) => (
+                                        <SelectItem key={type.value} value={type.value}>
+                                            {type.label}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                            <InputError message={errorFor(index, 'data_type')} />
                         </div>
 
-                        <div className="col-span-full">
-                            <label className="flex items-center gap-2 text-sm">
-                                <input
-                                    type="checkbox"
-                                    checked={variable.is_required}
-                                    onChange={(e) => change(index, 'is_required', e.target.checked)}
-                                    className="accent-primary"
-                                />
-                                Required
-                            </label>
+                        <div className="col-span-full flex items-center gap-2">
+                            <Checkbox
+                                id={`required-${variable.id}`}
+                                checked={variable.is_required}
+                                onCheckedChange={(checked) =>
+                                    change(index, 'is_required', checked === true)
+                                }
+                            />
+                            <Label htmlFor={`required-${variable.id}`}>Required</Label>
                         </div>
                     </div>
                 ))}
 
-                <Button
-                    type="submit"
-                    disabled={processing}
-                >
+                <Button type="submit" disabled={processing}>
                     Update
                 </Button>
             </form>
@@ -141,9 +144,5 @@ Edit.layout = {
             title: 'Templates',
             href: templateIndex(),
         },
-        {
-            title: 'Edit Template',
-            href: Edit,
-        }
     ],
 };

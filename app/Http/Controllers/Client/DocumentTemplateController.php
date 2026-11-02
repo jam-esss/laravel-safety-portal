@@ -10,6 +10,9 @@ use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Inertia\Response;
 use PhpOffice\PhpWord\TemplateProcessor;
+use App\Enums\DocumentType;
+use App\Enums\DocumentVariable;
+use Illuminate\Validation\Rule;
 
 class DocumentTemplateController extends Controller
 {
@@ -17,12 +20,15 @@ class DocumentTemplateController extends Controller
     {
         return Inertia::render('client/templates/index', [
             'templates' => DocumentTemplate::withCount('variables')->latest()->get(),
+            'documentTypes' => DocumentType::options(),
         ]);
     }
 
     public function create(): Response
     {
-        return Inertia::render('client/templates/create');
+        return Inertia::render('client/templates/create', [
+            'documentTypes' => DocumentType::options(),
+        ]);
     }
 
     public function store(Request $request): RedirectResponse
@@ -30,7 +36,7 @@ class DocumentTemplateController extends Controller
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
-            'document_type' => ['required', 'string', 'max:255'],
+            'document_type' => ['required', Rule::enum(DocumentType::class)],
             'file' => ['required', 'file', 'mimes:docx', 'max:10240'],
         ]);
 
@@ -64,6 +70,7 @@ class DocumentTemplateController extends Controller
     {
         return Inertia::render('client/templates/edit', [
             'template' => $documentTemplate->load('variables'),
+            'dataTypes' => DocumentVariable::options(),
         ]);
     }
 
@@ -74,7 +81,7 @@ class DocumentTemplateController extends Controller
             'variables.*.id' => ['required', 'integer'],
             'variables.*.title' => ['required', 'string', 'max:255'],
             'variables.*.description' => ['nullable', 'string'],
-            'variables.*.data_type' => ['required', 'in:text,textarea,number,date'],
+            'variables.*.data_type' => ['required', Rule::enum(DocumentVariable::class)],
             'variables.*.is_required' => ['required', 'boolean'],
         ]);
 
