@@ -1,5 +1,5 @@
 import { Link } from '@inertiajs/react';
-import {FileText, FolderGit2, LayoutGrid} from 'lucide-react';
+import {FileStack, FileText, FolderGit2, LayoutGrid} from 'lucide-react';
 import AppLogo from '@/components/app-logo';
 import { NavFooter } from '@/components/nav-footer';
 import { NavMain } from '@/components/nav-main';
@@ -14,7 +14,7 @@ import {
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
 import {dashboard} from '@/routes/client';
-import {index as documentsIndex} from '@/routes/client/documents';
+import {index as documentsIndex} from '@/routes/client/templates';
 import type { NavItem } from '@/types';
 
 const mainNavItems: NavItem[] = [
@@ -24,10 +24,15 @@ const mainNavItems: NavItem[] = [
         icon: LayoutGrid,
     },
     {
-        title: 'Documents',
+        title: 'Document Templates',
         href: documentsIndex(),
-        icon: FileText,
+        icon: FileStack,
     },
+    {
+        title: 'Documents',
+        href: '#',
+        icon: FileText,
+    }
 ];
 
 const footerNavItems: NavItem[] = [
