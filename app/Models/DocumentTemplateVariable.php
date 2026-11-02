@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\DocumentVariable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -20,6 +21,7 @@ class DocumentTemplateVariable extends Model
     {
         return [
             'is_required' => 'boolean',
+            'data_type' => DocumentVariable::class,
         ];
     }
 
