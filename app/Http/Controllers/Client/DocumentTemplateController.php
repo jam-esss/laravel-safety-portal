@@ -63,7 +63,9 @@ class DocumentTemplateController extends Controller
             ]);
         }
 
-        return redirect()->route('client.templates.edit', $template);
+        return redirect()
+            ->route('client.templates.edit', $template)
+            ->with('success', 'Template uploaded. Now check each variable below.');
     }
 
     public function edit(DocumentTemplate $documentTemplate): Response
@@ -96,6 +98,8 @@ class DocumentTemplateController extends Controller
                 ]);
         }
 
-        return redirect()->route('client.templates.index');
+        return redirect()
+            ->route('client.templates.index')
+            ->with('success', 'Template updated.');
     }
 }
