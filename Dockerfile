@@ -27,6 +27,15 @@ ADD https://github.com/mlocati/docker-php-extension-installer/releases/latest/do
 RUN chmod +x /usr/local/bin/install-php-extensions \
     && install-php-extensions pdo_mysql zip gd intl bcmath opcache
 
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        libreoffice-writer \
+        fonts-liberation \
+        fonts-crosextra-carlito \
+        fonts-crosextra-caladea \
+        fonts-dejavu-core \
+    && fc-cache -f \
+    && rm -rf /var/lib/apt/lists/*
+
 # Laravel's entry point is the "public" folder, not the project root
 ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' \
