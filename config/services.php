@@ -35,4 +35,9 @@ return [
         ],
     ],
 
+    'libreoffice' => [
+        'binary' => env('LIBREOFFICE_BINARY', 'C:/Program Files/LibreOffice/program/soffice.exe'),
+        'timeout' => env('LIBREOFFICE_TIMEOUT', 120),
+    ],
+
 ];
