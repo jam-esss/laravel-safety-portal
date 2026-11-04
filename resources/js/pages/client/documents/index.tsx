@@ -1,11 +1,11 @@
-import { Head, Link } from '@inertiajs/react';
-import { Calendar, Download, FileText } from 'lucide-react';
+import {Head, Link} from '@inertiajs/react';
+import {Calendar, Download, FileText} from 'lucide-react';
 import DocumentPreviewDialog from '@/components/document-preview-dialog';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { download, index as documentIndex } from '@/routes/client/documents';
-import { index as templateIndex } from '@/routes/client/templates';
+import {Badge} from '@/components/ui/badge';
+import {Button} from '@/components/ui/button';
+import {Card, CardContent, CardFooter, CardHeader, CardTitle,} from '@/components/ui/card';
+import {download, index as documentIndex} from '@/routes/client/documents';
+import {index as templateIndex} from '@/routes/client/templates';
 
 type DocumentRecord = {
     id: number;
@@ -16,13 +16,13 @@ type DocumentRecord = {
     };
 };
 
-export default function Index({ documents }: { documents: DocumentRecord[] }) {
+export default function Index({documents}: { documents: DocumentRecord[] }) {
     const formatDate = (value: string) =>
         new Date(value).toLocaleDateString('en-GB');
 
     return (
         <>
-            <Head title="Documents" />
+            <Head title="Documents"/>
 
             <div className="mx-auto w-full max-w-6xl space-y-6 p-6">
                 <div className="space-y-1">
@@ -47,40 +47,41 @@ export default function Index({ documents }: { documents: DocumentRecord[] }) {
                         </CardContent>
                     </Card>
                 ) : (
-                    <div className="space-y-3">
+                    <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
                         {documents.map((doc) => (
-                            <Card key={doc.id}>
-                                <CardContent className="flex items-center justify-between gap-4">
-                                    <div className="flex min-w-0 items-center gap-4">
-                                        <div className="rounded-md bg-muted p-2">
-                                            <FileText className="size-5 text-muted-foreground" />
-                                        </div>
-                                        <div className="min-w-0 space-y-1">
-                                            <p className="truncate font-medium">
-                                                {doc.title}
-                                            </p>
-                                            <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
-                                                <Badge variant="secondary">
-                                                    {doc.template.name}
-                                                </Badge>
-                                                <span className="flex items-center gap-1">
-                                                    <Calendar className="size-3.5" />
-                                                    {formatDate(doc.created_at)}
-                                                </span>
-                                            </div>
-                                        </div>
+                            <Card key={doc.id} className="flex flex-col">
+                                <CardHeader>
+                                    <div className="flex items-start justify-between gap-2">
+                                        <CardTitle className="line-clamp-2 leading-snug">
+                                            {doc.title}
+                                        </CardTitle>
+                                        <FileText className="size-5 shrink-0 text-muted-foreground"/>
                                     </div>
+                                    <Badge variant="secondary" className="w-fit">
+                                        {doc.template.name}
+                                    </Badge>
+                                </CardHeader>
 
-                                    <div className="flex shrink-0 gap-2">
-                                        <DocumentPreviewDialog id={doc.id} title={doc.title} />
-                                        <Button asChild>
-                                            <a href={download.url(doc.id)}>
-                                                <Download />
-                                                Download
-                                            </a>
-                                        </Button>
-                                    </div>
+                                <CardContent className="mt-auto text-sm text-muted-foreground">
+                                    <p className="flex items-center gap-2">
+                                        <Calendar className="size-4"/>
+                                        Created {formatDate(doc.created_at)}
+                                    </p>
                                 </CardContent>
+
+                                <CardFooter className="gap-2">
+                                    <DocumentPreviewDialog
+                                        id={doc.id}
+                                        title={doc.title}
+                                        className="flex-1"
+                                    />
+                                    <Button asChild className="flex-1">
+                                        <a href={download.url(doc.id)}>
+                                            <Download/>
+                                            Download
+                                        </a>
+                                    </Button>
+                                </CardFooter>
                             </Card>
                         ))}
                     </div>
