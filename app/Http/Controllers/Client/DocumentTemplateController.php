@@ -13,6 +13,7 @@ use PhpOffice\PhpWord\TemplateProcessor;
 use App\Enums\DocumentType;
 use App\Enums\DocumentVariable;
 use Illuminate\Validation\Rule;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class DocumentTemplateController extends Controller
 {
@@ -101,5 +102,22 @@ class DocumentTemplateController extends Controller
         return redirect()
             ->route('client.templates.index')
             ->with('success', 'Template updated.');
+    }
+
+    public function destroy(DocumentTemplate $documentTemplate): RedirectResponse
+    {
+        $documentTemplate->delete();
+
+        return redirect()
+            ->route('client.templates.index')
+            ->with('success', 'Template deleted.');
+    }
+
+    public function download(DocumentTemplate $documentTemplate): StreamedResponse
+    {
+        return Storage::download(
+            $documentTemplate->file_path,
+            $documentTemplate->original_filename,
+        );
     }
 }

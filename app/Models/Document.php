@@ -23,6 +23,6 @@ class Document extends Model
 
     public function template(): BelongsTo
     {
-        return $this->belongsTo(DocumentTemplate::class, 'document_template_id');
+        return $this->belongsTo(DocumentTemplate::class, 'document_template_id')->withTrashed();
     }
 }
