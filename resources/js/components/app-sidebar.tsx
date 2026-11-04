@@ -14,7 +14,8 @@ import {
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
 import {dashboard} from '@/routes/client';
-import {index as documentsIndex} from '@/routes/client/templates';
+import {index as templatesIndex} from '@/routes/client/templates';
+import {index as documentsIndex} from '@/routes/client/documents';
 import type { NavItem } from '@/types';
 import FlashToaster from "@/components/flash-toaster";
 
@@ -26,12 +27,12 @@ const mainNavItems: NavItem[] = [
     },
     {
         title: 'Document Templates',
-        href: documentsIndex(),
+        href: templatesIndex(),
         icon: FileStack,
     },
     {
         title: 'Documents',
-        href: '#',
+        href: documentsIndex(),
         icon: FileText,
     }
 ];
