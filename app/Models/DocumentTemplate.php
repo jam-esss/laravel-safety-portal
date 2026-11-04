@@ -28,7 +28,7 @@ class DocumentTemplate extends Model
 
     public function variables(): HasMany
     {
-        return $this->hasMany(DocumentTemplateVariable::class);
+        return $this->hasMany(DocumentTemplateVariable::class)->orderBy('id');
     }
 
     public function documents(): HasMany
