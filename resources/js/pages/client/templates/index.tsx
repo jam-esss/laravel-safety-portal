@@ -1,10 +1,11 @@
 import { Head, Link } from '@inertiajs/react';
-import { Clock, FilePlus, ListChecks, Pencil, Plus, Upload } from 'lucide-react';
+import { Clock, Download, FilePlus, ListChecks, Pencil, Plus, Upload } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle,} from '@/components/ui/card';
 import { create as createDocument } from '@/routes/client/documents';
-import { create, edit, index as templateIndex } from '@/routes/client/templates';
+import DeleteTemplateDialog from '@/components/delete-template-dialog';
+import { create, download, edit, index as templateIndex } from '@/routes/client/templates';
 
 type Template = {
     id: number;
@@ -21,10 +22,7 @@ type Option = {
     label: string;
 };
 
-export default function Index({
-                                  templates,
-                                  documentTypes,
-                              }: {
+export default function Index({templates, documentTypes,}: {
     templates: Template[];
     documentTypes: Option[];
 }) {
@@ -109,12 +107,17 @@ export default function Index({
                                             New document
                                         </Link>
                                     </Button>
-                                    <Button asChild variant="outline">
+                                    <Button asChild variant="outline" size="icon" aria-label="Edit template">
                                         <Link href={edit.url(template.id)}>
                                             <Pencil />
-                                            Edit
                                         </Link>
                                     </Button>
+                                    <Button asChild variant="outline" size="icon" aria-label="Download template">
+                                        <a href={download.url(template.id)}>
+                                            <Download />
+                                        </a>
+                                    </Button>
+                                    <DeleteTemplateDialog id={template.id} name={template.name} />
                                 </CardFooter>
                             </Card>
                         ))}
