@@ -18,7 +18,7 @@ class DocumentTemplateVariable extends Model
         'is_required',
     ];
 
-    protected $appends = ['is_system'];
+    protected $appends = ['is_system', 'input_type'];
 
     protected function casts(): array
     {
@@ -36,5 +36,10 @@ class DocumentTemplateVariable extends Model
     public function getIsSystemAttribute(): bool
     {
         return DocumentSystemVariable::tryFrom($this->placeholder) !== null;
+    }
+
+    public function getInputTypeAttribute(): string
+    {
+        return $this->data_type->inputType();
     }
 }

@@ -76,11 +76,7 @@ class DocumentController extends Controller
 
             $rules[$key] = [
                 $variable->is_required ? 'required' : 'nullable',
-                match ($variable->data_type) {
-                    DocumentVariable::Number => 'numeric',
-                    DocumentVariable::Date => 'date',
-                    default => 'string',
-                },
+                ...$variable->data_type->rules(),
             ];
 
             $attributes[$key] = $variable->title;
@@ -109,7 +105,7 @@ class DocumentController extends Controller
                 $columns[$system->value] = $value !== '' ? $value : null;
             }
 
-            if ($variable->data_type === DocumentVariable::Date && $value !== '') {
+            if ($variable->data_type->isDate() && $value !== '') {
                 $value = Carbon::parse($value)->format('d/m/Y');
             }
 
