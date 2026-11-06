@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\DocumentSystemVariable;
 use App\Enums\DocumentVariable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -17,6 +18,8 @@ class DocumentTemplateVariable extends Model
         'is_required',
     ];
 
+    protected $appends = ['is_system'];
+
     protected function casts(): array
     {
         return [
@@ -28,5 +31,10 @@ class DocumentTemplateVariable extends Model
     public function template(): BelongsTo
     {
         return $this->belongsTo(DocumentTemplate::class, 'document_template_id');
+    }
+
+    public function getIsSystemAttribute(): bool
+    {
+        return DocumentSystemVariable::tryFrom($this->placeholder) !== null;
     }
 }
