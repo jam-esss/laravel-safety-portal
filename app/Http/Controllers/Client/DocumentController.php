@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Client;
 
+use App\Enums\DocumentSystemVariable;
 use App\Http\Controllers\Controller;
 use App\Models\DocumentTemplate;
 use Inertia\Inertia;
@@ -45,8 +46,17 @@ class DocumentController extends Controller
 
     public function create(DocumentTemplate $documentTemplate): Response
     {
+        $documentTemplate->load('variables');
+
+        $documentTemplate->setRelation(
+            'variables',
+            $documentTemplate->variables
+                ->reject(fn ($variable) => DocumentSystemVariable::tryFrom($variable->placeholder)?->isAutoFilled())
+                ->values(),
+        );
+
         return Inertia::render('client/documents/create', [
-            'template' => $documentTemplate->load('variables'),
+            'template' => $documentTemplate,
         ]);
     }
 
@@ -58,6 +68,10 @@ class DocumentController extends Controller
         $attributes = [];
 
         foreach ($variables as $variable) {
+            if (DocumentSystemVariable::tryFrom($variable->placeholder)?->isAutoFilled()) {
+                continue;
+            }
+
             $key = "values.{$variable->id}";
 
             $rules[$key] = [
@@ -78,11 +92,22 @@ class DocumentController extends Controller
         $processor = new TemplateProcessor(Storage::path($documentTemplate->file_path));
 
         $values = [];
+        $columns = [];
 
         foreach ($variables as $variable) {
-            $value = $validated['values'][$variable->id] ?? '';
+            $system = DocumentSystemVariable::tryFrom($variable->placeholder);
+
+            $value = match ($system) {
+                DocumentSystemVariable::Today => now()->toDateString(),
+                DocumentSystemVariable::CreatedBy => $request->user()->name,
+                default => $validated['values'][$variable->id] ?? '',
+            };
 
             $values[$variable->placeholder] = $value;
+
+            if (in_array($system, [DocumentSystemVariable::ExpiryDate, DocumentSystemVariable::ReviewDate], true)) {
+                $columns[$system->value] = $value !== '' ? $value : null;
+            }
 
             if ($variable->data_type === DocumentVariable::Date && $value !== '') {
                 $value = Carbon::parse($value)->format('d/m/Y');
@@ -97,13 +122,14 @@ class DocumentController extends Controller
 
         Document::create([
             'document_template_id' => $documentTemplate->id,
+            'user_id' => $request->user()->id,
             'title' => $validated['title'],
             'values' => $values,
             'file_path' => $path,
+            ...$columns,
         ]);
 
         return redirect()
             ->route('client.documents.index')
             ->with('success', 'Document created.');
-    }
-}
+    }}

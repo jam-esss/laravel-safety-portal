@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
 use App\Models\DocumentTemplate;
+use App\Enums\DocumentSystemVariable;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -56,11 +57,14 @@ class DocumentTemplateController extends Controller
         ]);
 
         foreach ($placeholders as $placeholder) {
+            $system = DocumentSystemVariable::tryFrom($placeholder);
+
             $template->variables()->create([
                 'placeholder' => $placeholder,
-                'title' => $placeholder,
-                'data_type' => 'text',
-                'is_required' => true,
+                'title' => $system?->label() ?? $placeholder,
+                'description' => $system?->description(),
+                'data_type' => $system?->dataType()->value ?? DocumentVariable::Text->value,
+                'is_required' => $system ? ! $system->isAutoFilled() : true,
             ]);
         }
 
@@ -89,14 +93,20 @@ class DocumentTemplateController extends Controller
         ]);
 
         foreach ($validated['variables'] as $item) {
-            $documentTemplate->variables()
-                ->where('id', $item['id'])
-                ->update([
-                    'title' => $item['title'],
-                    'description' => $item['description'] ?? null,
-                    'data_type' => $item['data_type'],
-                    'is_required' => $item['is_required'],
-                ]);
+            $variable = $documentTemplate->variables()->find($item['id']);
+
+            if (! $variable) {
+                continue;
+            }
+
+            $system = DocumentSystemVariable::tryFrom($variable->placeholder);
+
+            $variable->update([
+                'title' => $item['title'],
+                'description' => $item['description'] ?? null,
+                'data_type' => $system ? $system->dataType()->value : $item['data_type'],
+                'is_required' => $system ? ! $system->isAutoFilled() : $item['is_required'],
+            ]);
         }
 
         return redirect()

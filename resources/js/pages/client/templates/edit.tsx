@@ -12,6 +12,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
+import { Badge } from '@/components/ui/badge';
 import { index as templateIndex, update } from '@/routes/client/templates';
 
 type Option = {
@@ -26,6 +27,7 @@ type Variable = {
     description: string | null;
     data_type: string;
     is_required: boolean;
+    is_system: boolean;
 };
 
 type Template = {
@@ -72,9 +74,12 @@ export default function Edit({
                         key={variable.id}
                         className="grid grid-cols-1 gap-4 rounded border p-3 md:grid-cols-2 lg:grid-cols-3"
                     >
-                        <p className="col-span-full font-mono text-sm text-primary">
-                            {'${' + variable.placeholder + '}'}
-                        </p>
+                        <div className="col-span-full flex items-center gap-2">
+                            <p className="font-mono text-sm text-primary">
+                                {'${' + variable.placeholder + '}'}
+                            </p>
+                            {variable.is_system && <Badge variant="secondary">Built-in</Badge>}
+                        </div>
 
                         <div className="grid gap-2">
                             <Label htmlFor={`title-${variable.id}`}>Title</Label>
@@ -102,6 +107,7 @@ export default function Edit({
                             <Select
                                 value={variable.data_type}
                                 onValueChange={(value) => change(index, 'data_type', value)}
+                                disabled={variable.is_system}
                             >
                                 <SelectTrigger id={`data-type-${variable.id}`}>
                                     <SelectValue />
@@ -121,9 +127,8 @@ export default function Edit({
                             <Checkbox
                                 id={`required-${variable.id}`}
                                 checked={variable.is_required}
-                                onCheckedChange={(checked) =>
-                                    change(index, 'is_required', checked === true)
-                                }
+                                onCheckedChange={(checked) => change(index, 'is_required', checked === true)}
+                                disabled={variable.is_system}
                             />
                             <Label htmlFor={`required-${variable.id}`}>Required</Label>
                         </div>
