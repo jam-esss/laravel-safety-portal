@@ -4,9 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use App\Concerns\BelongsToCompany;
 
 class Document extends Model
 {
+    use BelongsToCompany;
+
     protected $fillable = [
         'document_template_id',
         'title',
