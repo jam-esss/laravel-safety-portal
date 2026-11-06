@@ -18,6 +18,7 @@ use PhpOffice\PhpWord\Settings;
 use PhpOffice\PhpWord\TemplateProcessor;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use App\Services\DocumentPdfConverter;
+use Illuminate\Support\Facades\Gate;
 
 class DocumentController extends Controller
 {
@@ -46,6 +47,8 @@ class DocumentController extends Controller
 
     public function create(DocumentTemplate $documentTemplate): Response
     {
+        Gate::authorize('create', Document::class);
+
         $documentTemplate->load('variables');
 
         $documentTemplate->setRelation(
@@ -62,6 +65,8 @@ class DocumentController extends Controller
 
     public function store(Request $request, DocumentTemplate $documentTemplate): RedirectResponse
     {
+        Gate::authorize('create', Document::class);
+
         $variables = $documentTemplate->variables;
 
         $rules = ['title' => ['required', 'string', 'max:255']];
