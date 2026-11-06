@@ -1,5 +1,16 @@
 import { Link } from '@inertiajs/react';
-import {FileStack, FileText, FolderGit2, LayoutGrid} from 'lucide-react';
+import {
+    Building,
+    Car,
+    FileStack,
+    FileText,
+    FolderGit2,
+    GraduationCap,
+    LayoutGrid,
+    List,
+    Timeline,
+    User
+} from 'lucide-react';
 import AppLogo from '@/components/app-logo';
 import { NavFooter } from '@/components/nav-footer';
 import { NavMain } from '@/components/nav-main';
@@ -34,6 +45,36 @@ const mainNavItems: NavItem[] = [
         title: 'Documents',
         href: documentsIndex(),
         icon: FileText,
+    },
+    {
+        title: 'Assets Register',
+        href: '#',
+        icon: List,
+    },
+    {
+        title: 'Fleet Management',
+        href: '#',
+        icon: Car,
+    },
+    {
+        title: 'Personnel',
+        href: '#',
+        icon: User,
+    },
+    {
+        title: 'Sites',
+        href: '#',
+        icon: Building,
+    },
+    {
+        title: 'Training',
+        href: '#',
+        icon: GraduationCap,
+    },
+    {
+        title: 'Projects',
+        href: '#',
+        icon: Timeline,
     }
 ];
 
