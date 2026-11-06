@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { store } from '@/routes/client/documents';
+import { Checkbox } from '@/components/ui/checkbox';
 import {create, index as documentsIndex} from "@/routes/client/documents";
 
 type Variable = {
@@ -14,6 +15,7 @@ type Variable = {
     title: string;
     description: string | null;
     data_type: string;
+    input_type: string;
     is_required: boolean;
 };
 
@@ -30,7 +32,10 @@ export default function Create({ template }: { template: Template }) {
     }>({
         title: '',
         values: Object.fromEntries(
-            template.variables.map((variable) => [variable.id, '']),
+            template.variables.map((variable) => [
+                variable.id,
+                variable.input_type === 'checkbox' ? 'No' : '',
+            ]),
         ),
     });
 
@@ -127,35 +132,36 @@ export default function Create({ template }: { template: Template }) {
                                                 )}
                                             </Label>
 
-                                            {variable.data_type === 'textarea' ? (
+                                            {variable.input_type === 'textarea' && (
                                                 <Textarea
                                                     id={id}
                                                     value={data.values[variable.id]}
-                                                    onChange={(e) =>
-                                                        setValue(
-                                                            variable.id,
-                                                            e.target.value,
-                                                        )
-                                                    }
+                                                    onChange={(e) => setValue(variable.id, e.target.value)}
                                                     aria-invalid={!!error}
                                                     required={variable.is_required}
                                                     rows={4}
                                                 />
-                                            ) : (
+                                            )}
+
+                                            {variable.input_type === 'checkbox' && (
+                                                <div className="flex items-center gap-2">
+                                                    <Checkbox
+                                                        id={id}
+                                                        checked={data.values[variable.id] === 'Yes'}
+                                                        onCheckedChange={(checked) =>
+                                                            setValue(variable.id, checked === true ? 'Yes' : 'No')
+                                                        }
+                                                    />
+                                                    <span className="text-sm text-muted-foreground">Tick for Yes</span>
+                                                </div>
+                                            )}
+
+                                            {variable.input_type !== 'textarea' && variable.input_type !== 'checkbox' && (
                                                 <Input
                                                     id={id}
-                                                    type={
-                                                        variable.data_type === 'text'
-                                                            ? 'text'
-                                                            : variable.data_type
-                                                    }
+                                                    type={variable.input_type}
                                                     value={data.values[variable.id]}
-                                                    onChange={(e) =>
-                                                        setValue(
-                                                            variable.id,
-                                                            e.target.value,
-                                                        )
-                                                    }
+                                                    onChange={(e) => setValue(variable.id, e.target.value)}
                                                     aria-invalid={!!error}
                                                     required={variable.is_required}
                                                 />
