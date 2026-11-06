@@ -2,7 +2,13 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::redirect('/', '/login')->name('home');
+Route::get('/', function () {
+    if (auth()->check()) {
+        return redirect()->route('client.dashboard');
+    }
+
+    return redirect()->route('login');
+})->name('home');
 
 Route::middleware(['auth', 'verified'])->name('client.')->group(function () {
     require __DIR__ . '/client.php';
