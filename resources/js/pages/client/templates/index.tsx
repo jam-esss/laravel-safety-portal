@@ -1,11 +1,12 @@
-import { Head, Link } from '@inertiajs/react';
-import { Clock, Download, FilePlus, ListChecks, Pencil, Plus, Upload } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
+import {Head, Link} from '@inertiajs/react';
+import {Clock, Download, FilePlus, ListChecks, Pencil, Plus, Upload} from 'lucide-react';
+import {Badge} from '@/components/ui/badge';
+import {Button} from '@/components/ui/button';
 import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle,} from '@/components/ui/card';
-import { create as createDocument } from '@/routes/client/documents';
+import {create as createDocument} from '@/routes/client/documents';
 import DeleteTemplateDialog from '@/components/delete-template-dialog';
-import { create, download, edit, index as templateIndex } from '@/routes/client/templates';
+import {create, download, edit, index as templateIndex} from '@/routes/client/templates';
+import {usePermissions} from '@/hooks/use-permissions';
 
 type Template = {
     id: number;
@@ -26,6 +27,7 @@ export default function Index({templates, documentTypes,}: {
     templates: Template[];
     documentTypes: Option[];
 }) {
+    const can = usePermissions();
     const typeLabel = (value: string) =>
         documentTypes.find((type) => type.value === value)?.label ?? value;
 
@@ -34,7 +36,7 @@ export default function Index({templates, documentTypes,}: {
 
     return (
         <>
-            <Head title="Templates" />
+            <Head title="Templates"/>
 
             <div className="mx-auto w-full max-w-6xl space-y-6 p-6">
                 <div className="flex items-start justify-between gap-4">
@@ -46,12 +48,14 @@ export default function Index({templates, documentTypes,}: {
                             Choose a template to create a document, or upload a new one.
                         </p>
                     </div>
-                    <Button asChild>
-                        <Link href={create.url()}>
-                            <Plus />
-                            Upload template
-                        </Link>
-                    </Button>
+                    {can.manageTemplates && (
+                        <Button asChild>
+                            <Link href={create.url()}>
+                                <Plus/>
+                                Upload template
+                            </Link>
+                        </Button>
+                    )}
                 </div>
 
                 {templates.length === 0 ? (
@@ -61,9 +65,11 @@ export default function Index({templates, documentTypes,}: {
                             <p className="text-sm text-muted-foreground">
                                 Upload a Word document containing placeholders to get started.
                             </p>
-                            <Button asChild variant="outline">
-                                <Link href={create.url()}>Upload your first template</Link>
-                            </Button>
+                            {can.manageTemplates && (
+                                <Button asChild variant="outline">
+                                    <Link href={create.url()}>Upload your first template</Link>
+                                </Button>
+                            )}
                         </CardContent>
                     </Card>
                 ) : (
@@ -86,38 +92,46 @@ export default function Index({templates, documentTypes,}: {
 
                                 <CardContent className="mt-auto space-y-1 text-sm text-muted-foreground">
                                     <p className="flex items-center gap-2">
-                                        <ListChecks className="size-4" />
+                                        <ListChecks className="size-4"/>
                                         {template.variables_count}{' '}
                                         {template.variables_count === 1 ? 'variable' : 'variables'}
                                     </p>
                                     <p className="flex items-center gap-2">
-                                        <Upload className="size-4" />
+                                        <Upload className="size-4"/>
                                         Uploaded {formatDate(template.created_at)}
                                     </p>
                                     <p className="flex items-center gap-2">
-                                        <Clock className="size-4" />
+                                        <Clock className="size-4"/>
                                         Updated {formatDate(template.updated_at)}
                                     </p>
                                 </CardContent>
 
                                 <CardFooter className="gap-2">
-                                    <Button asChild className="flex-1">
-                                        <Link href={createDocument.url(template.id)}>
-                                            <FilePlus />
-                                            New document
-                                        </Link>
-                                    </Button>
-                                    <Button asChild variant="outline" size="icon" aria-label="Edit template">
-                                        <Link href={edit.url(template.id)}>
-                                            <Pencil />
-                                        </Link>
-                                    </Button>
+                                    {can.manageDocuments && (
+                                        <Button asChild className="flex-1">
+                                            <Link href={createDocument.url(template.id)}>
+                                                <FilePlus/>
+                                                New document
+                                            </Link>
+                                        </Button>
+                                    )}
+                                    {can.manageTemplates && (
+                                        <>
+                                            <Button asChild variant="outline" size="icon" aria-label="Edit template">
+                                                <Link href={edit.url(template.id)}>
+                                                    <Pencil/>
+                                                </Link>
+                                            </Button>
+                                        </>
+                                    )}
                                     <Button asChild variant="outline" size="icon" aria-label="Download template">
                                         <a href={download.url(template.id)}>
-                                            <Download />
+                                            <Download/>
                                         </a>
                                     </Button>
-                                    <DeleteTemplateDialog id={template.id} name={template.name} />
+                                    {can.manageTemplates && (
+                                        <DeleteTemplateDialog id={template.id} name={template.name}/>
+                                    )}
                                 </CardFooter>
                             </Card>
                         ))}
