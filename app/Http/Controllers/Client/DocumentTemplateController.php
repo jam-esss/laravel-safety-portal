@@ -15,11 +15,14 @@ use App\Enums\DocumentType;
 use App\Enums\DocumentVariable;
 use Illuminate\Validation\Rule;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+use Illuminate\Support\Facades\Gate;
 
 class DocumentTemplateController extends Controller
 {
     public function index(): Response
     {
+        Gate::authorize('viewAny', DocumentTemplate::class);
+
         return Inertia::render('client/templates/index', [
             'templates' => DocumentTemplate::withCount('variables')->latest()->get(),
             'documentTypes' => DocumentType::options(),
@@ -28,6 +31,8 @@ class DocumentTemplateController extends Controller
 
     public function create(): Response
     {
+        Gate::authorize('create', DocumentTemplate::class);
+
         return Inertia::render('client/templates/create', [
             'documentTypes' => DocumentType::options(),
         ]);
@@ -35,6 +40,8 @@ class DocumentTemplateController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
+        Gate::authorize('create', DocumentTemplate::class);
+
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
@@ -75,6 +82,8 @@ class DocumentTemplateController extends Controller
 
     public function edit(DocumentTemplate $documentTemplate): Response
     {
+        Gate::authorize('update', $documentTemplate);
+
         return Inertia::render('client/templates/edit', [
             'template' => $documentTemplate->load('variables'),
             'dataTypes' => DocumentVariable::options(),
@@ -83,6 +92,8 @@ class DocumentTemplateController extends Controller
 
     public function update(Request $request, DocumentTemplate $documentTemplate): RedirectResponse
     {
+        Gate::authorize('update', $documentTemplate);
+
         $validated = $request->validate([
             'variables' => ['required', 'array'],
             'variables.*.id' => ['required', 'integer'],
@@ -116,6 +127,8 @@ class DocumentTemplateController extends Controller
 
     public function destroy(DocumentTemplate $documentTemplate): RedirectResponse
     {
+        Gate::authorize('delete', $documentTemplate);
+
         $documentTemplate->delete();
 
         return redirect()
@@ -125,6 +138,8 @@ class DocumentTemplateController extends Controller
 
     public function download(DocumentTemplate $documentTemplate): StreamedResponse
     {
+        Gate::authorize('view', $documentTemplate);
+
         return Storage::download(
             $documentTemplate->file_path,
             $documentTemplate->original_filename,
