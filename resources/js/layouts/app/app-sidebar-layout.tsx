@@ -3,11 +3,14 @@ import { AppShell } from '@/components/app-shell';
 import { AppSidebar } from '@/components/app-sidebar';
 import { AppSidebarHeader } from '@/components/app-sidebar-header';
 import type { AppLayoutProps } from '@/types';
+import { useCompanyTheme } from '@/hooks/use-company-theme';
 
 export default function AppSidebarLayout({
     children,
     breadcrumbs = [],
 }: AppLayoutProps) {
+    useCompanyTheme();
+
     return (
         <AppShell variant="sidebar">
             <AppSidebar />
