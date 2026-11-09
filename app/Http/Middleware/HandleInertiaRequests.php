@@ -4,6 +4,8 @@ namespace App\Http\Middleware;
 
 use Illuminate\Http\Request;
 use Inertia\Middleware;
+use App\Models\Document;
+use App\Models\DocumentTemplate;
 
 class HandleInertiaRequests extends Middleware
 {
@@ -40,6 +42,11 @@ class HandleInertiaRequests extends Middleware
             'name' => config('app.name'),
             'auth' => [
                 'user' => $request->user(),
+                'company' => $request->user()?->company?->only('id', 'name', 'logo', 'colour'),
+                'can' => [
+                    'manageDocuments' => $request->user()?->can('create', Document::class) ?? false,
+                    'manageTemplates' => $request->user()?->can('create', DocumentTemplate::class) ?? false,
+                ],
             ],
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
             'flash' => [
