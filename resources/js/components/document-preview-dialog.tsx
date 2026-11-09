@@ -1,4 +1,4 @@
-import {Eye, Loader2} from 'lucide-react';
+import {ExternalLinkIcon, Eye, Loader2} from 'lucide-react';
 import {useState} from 'react';
 import {Button} from '@/components/ui/button';
 import {
@@ -10,6 +10,7 @@ import {
 } from '@/components/ui/dialog';
 import {preview} from '@/routes/client/documents';
 import {cn} from '@/lib/utils';
+import {Link} from "@inertiajs/react";
 
 export default function DocumentPreviewDialog({id, title, className,}: {
     id: number;
@@ -41,7 +42,15 @@ export default function DocumentPreviewDialog({id, title, className,}: {
                 >
                     <DialogHeader>
                         <DialogTitle>
-                            {title}
+                            <Link
+                                href={preview.url(id)}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center gap-2 hover:text-primary hover:underline"
+                            >
+                                {title}
+                                <ExternalLinkIcon className="size-4 shrink-0"/>
+                            </Link>
                         </DialogTitle>
                     </DialogHeader>
 
