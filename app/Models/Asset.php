@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Concerns\BelongsToCompany;
 use App\Enums\AssetStatus;
+use App\Enums\AssetType;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Str;
@@ -35,6 +36,7 @@ class Asset extends Model
     protected function casts(): array
     {
         return [
+            'type' => AssetType::class,
             'status' => AssetStatus::class,
             'purchase_date' => 'date',
             'purchase_price' => 'decimal:2',
