@@ -23,13 +23,16 @@ const selectClasses =
 
 export default function Create({
                                    statuses,
+                                   types,
                                    companies,
                                }: {
     statuses: Status[];
+    types: Status[];
     companies: CompanyOption[] | null;
 }) {
     const { data, setData, post, processing, errors } = useForm({
         company_id: '',
+        asset_type: '',
         make: '',
         model: '',
         description: '',
@@ -98,6 +101,29 @@ export default function Create({
                                 <InputError message={errors.company_id} />
                             </div>
                         )}
+
+                        <div className="grid gap-2">
+                            <Label htmlFor="asset_type">
+                                Asset type
+                                <span className="text-destructive"> *</span>
+                            </Label>
+                            <select
+                                id="asset_type"
+                                className={selectClasses}
+                                value={data.asset_type}
+                                onChange={(e) => setData('asset_type', e.target.value)}
+                                aria-invalid={!!errors.asset_type}
+                                required
+                            >
+                                <option value="">Select a type</option>
+                                {types.map((type) => (
+                                    <option key={type.value} value={type.value}>
+                                        {type.label}
+                                    </option>
+                                ))}
+                            </select>
+                            <InputError message={errors.asset_type} />
+                        </div>
 
                         <div className="grid gap-4 sm:grid-cols-2">
                             <div className="grid gap-2">
