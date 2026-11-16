@@ -4,14 +4,25 @@ namespace App\Enums;
 
 enum AssetType: string
 {
-    case Equipment = 'equipment';
     case Vehicle = 'vehicle';
+    case LiftingTool = 'lifting_tool';
+    case PowerTool = 'power_tool';
+    case HandTool = 'hand_tool';
+    case Other = 'other';
 
     public function label(): string
     {
         return match ($this) {
-            self::Equipment => 'Equipment',
             self::Vehicle => 'Vehicle',
+            self::LiftingTool => 'Lifting tool',
+            self::PowerTool => 'Power tool',
+            self::HandTool => 'Hand tool',
+            self::Other => 'Other',
         };
+    }
+
+    public function isFleet(): bool
+    {
+        return $this === self::Vehicle;
     }
 }
