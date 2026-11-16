@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Client\AssetController;
 use App\Http\Controllers\Client\DocumentTemplateController;
 use App\Http\Controllers\Client\DocumentController;
 use Illuminate\Support\Facades\Route;
@@ -22,4 +23,8 @@ Route::prefix('templates')->name('templates.')->group(function () {
     Route::put('/{documentTemplate}', [DocumentTemplateController::class, 'update'])->name('update');
     Route::get('/{documentTemplate}/download', [DocumentTemplateController::class, 'download'])->name('download');
     Route::delete('/{documentTemplate}', [DocumentTemplateController::class, 'destroy'])->name('destroy');
+});
+
+Route::prefix('assets')->name('assets.')->group(function () {
+    Route::get('/', [AssetController::class, 'index'])->name('index');
 });
