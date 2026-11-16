@@ -22,6 +22,7 @@ class Asset extends Model
         'purchase_date',
         'purchase_price',
         'location',
+        'company_id',
     ];
 
     protected static function booted(): void
