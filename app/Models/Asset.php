@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Concerns\BelongsToCompany;
+use App\Enums\AssetStatus;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Str;
@@ -28,6 +29,15 @@ class Asset extends Model
         static::creating(function ($asset) {
             $asset->tkn = Str::random(40);
         });
+    }
+
+    protected function casts(): array
+    {
+        return [
+            'status' => AssetStatus::class,
+            'purchase_date' => 'date',
+            'purchase_price' => 'decimal:2',
+        ];
     }
 
     public function files(): MorphMany
