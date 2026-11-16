@@ -1,7 +1,9 @@
-import { Head } from '@inertiajs/react';
+import { Head, Link } from '@inertiajs/react';
+import { Plus } from 'lucide-react';
 import DataTable from '@/components/data-table';
+import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { index as assetIndex } from '@/routes/client/assets';
+import { create, index as assetIndex } from '@/routes/client/assets';
 
 type AssetRecord = {
     id: number;
@@ -37,13 +39,22 @@ export default function Index({ assets }: { assets: AssetRecord[] }) {
             <Head title="Assets" />
 
             <div className="mx-auto w-full max-w-6xl space-y-6 p-6">
-                <div className="space-y-1">
-                    <h1 className="text-3xl font-semibold tracking-tight">
-                        Assets
-                    </h1>
-                    <p className="text-muted-foreground">
-                        Equipment and items your company keeps track of.
-                    </p>
+                <div className="flex items-start justify-between gap-4">
+                    <div className="space-y-1">
+                        <h1 className="text-3xl font-semibold tracking-tight">
+                            Assets
+                        </h1>
+                        <p className="text-muted-foreground">
+                            Equipment and items your company keeps track of.
+                        </p>
+                    </div>
+
+                    <Button asChild>
+                        <Link href={create.url()}>
+                            <Plus />
+                            New asset
+                        </Link>
+                    </Button>
                 </div>
 
                 {assets.length === 0 ? (
