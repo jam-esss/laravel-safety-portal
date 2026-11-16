@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Client;
 
 use App\Enums\AssetStatus;
+use App\Enums\AssetType;
 use App\Http\Controllers\Controller;
 use App\Models\Asset;
 use App\Models\Company;
@@ -27,6 +28,10 @@ class AssetController extends Controller
             'statuses' => collect(AssetStatus::cases())->map(fn ($status) => [
                 'value' => $status->value,
                 'label' => $status->label(),
+            ]),
+            'types' => collect(AssetType::cases())->map(fn ($type) => [
+                'value' => $type->value,
+                'label' => $type->label(),
             ]),
             'companies' => $request->user()->office_user
                 ? Company::orderBy('name')->get(['id', 'name'])
@@ -57,6 +62,7 @@ class AssetController extends Controller
             'purchase_date' => ['nullable', 'date'],
             'purchase_price' => ['nullable', 'numeric', 'min:0'],
             'location' => ['nullable', 'string', 'max:255'],
+            'asset_type' => ['required', Rule::enum(AssetType::class)],
         ];
 
         if ($user->office_user) {
