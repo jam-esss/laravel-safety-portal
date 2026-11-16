@@ -27,6 +27,6 @@ Route::prefix('templates')->name('templates.')->group(function () {
 
 Route::prefix('assets')->name('assets.')->group(function () {
     Route::get('/', [AssetController::class, 'index'])->name('index');
-    Route::get('assets/create', [AssetController::class, 'create'])->name('create');
-    Route::post('assets', [AssetController::class, 'store'])->name('store');
+    Route::get('/create', [AssetController::class, 'create'])->name('create');
+    Route::post('/', [AssetController::class, 'store'])->name('store');
 });
