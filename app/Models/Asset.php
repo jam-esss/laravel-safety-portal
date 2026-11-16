@@ -24,6 +24,7 @@ class Asset extends Model
         'purchase_price',
         'location',
         'company_id',
+        'asset_type'
     ];
 
     protected static function booted(): void
@@ -36,7 +37,7 @@ class Asset extends Model
     protected function casts(): array
     {
         return [
-            'type' => AssetType::class,
+            'asset_type' => AssetType::class,
             'status' => AssetStatus::class,
             'purchase_date' => 'date',
             'purchase_price' => 'decimal:2',
