@@ -17,6 +17,7 @@ class Document extends Model
         'file_path',
         'expiry_date',
         'review_date',
+        'user_id'
     ];
 
     protected function casts(): array
