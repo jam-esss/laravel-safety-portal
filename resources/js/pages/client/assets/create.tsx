@@ -25,14 +25,16 @@ export default function Create({
                                    statuses,
                                    types,
                                    companies,
+                                   defaultType,
                                }: {
     statuses: Status[];
     types: Status[];
     companies: CompanyOption[] | null;
+    defaultType: string | null;
 }) {
     const { data, setData, post, processing, errors } = useForm({
         company_id: '',
-        asset_type: '',
+        asset_type: defaultType || '',
         make: '',
         model: '',
         description: '',

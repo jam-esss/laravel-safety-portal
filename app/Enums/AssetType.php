@@ -25,4 +25,13 @@ enum AssetType: string
     {
         return $this === self::Vehicle;
     }
+
+    public static function fleetValues(): array
+    {
+        return collect(self::cases())
+            ->filter(fn (self $type) => $type->isFleet())
+            ->map(fn (self $type) => $type->value)
+            ->values()
+            ->all();
+    }
 }

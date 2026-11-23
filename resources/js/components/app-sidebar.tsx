@@ -28,6 +28,7 @@ import {dashboard} from '@/routes/client';
 import {index as templatesIndex} from '@/routes/client/templates';
 import {index as documentsIndex} from '@/routes/client/documents';
 import {index as assetsIndex} from '@/routes/client/assets';
+import {index as fleetIndex} from '@/routes/client/fleet';
 import type { NavItem } from '@/types';
 import FlashToaster from "@/components/flash-toaster";
 
@@ -54,7 +55,7 @@ const mainNavItems: NavItem[] = [
     },
     {
         title: 'Fleet Management',
-        href: '#',
+        href: fleetIndex(),
         icon: Car,
     },
     {

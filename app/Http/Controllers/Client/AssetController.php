@@ -18,24 +18,25 @@ class AssetController extends Controller
     public function index(): Response
     {
         return Inertia::render('client/assets/index', [
-            'assets' => Asset::with('company:id,name')->latest()->get(),
+            'assets' => Asset::register()->with('company:id,name')->latest()->get(),
         ]);
     }
 
     public function create(Request $request): Response
     {
         return Inertia::render('client/assets/create', [
-            'statuses' => collect(AssetStatus::cases())->map(fn ($status) => [
+            'statuses' => collect(AssetStatus::cases())->map(fn($status) => [
                 'value' => $status->value,
                 'label' => $status->label(),
             ]),
-            'types' => collect(AssetType::cases())->map(fn ($type) => [
+            'types' => collect(AssetType::cases())->map(fn($type) => [
                 'value' => $type->value,
                 'label' => $type->label(),
             ]),
             'companies' => $request->user()->office_user
                 ? Company::orderBy('name')->get(['id', 'name'])
                 : null,
+            'defaultType' => AssetType::tryFrom($request->string('asset_type')->toString())?->value,
         ]);
     }
 
@@ -69,10 +70,10 @@ class AssetController extends Controller
             $rules['company_id'] = ['required', 'exists:companies,id'];
         }
 
-        Asset::create($request->validate($rules));
+        $asset = Asset::create($request->validate($rules));
 
         return redirect()
-            ->route('client.assets.index')
+            ->route($asset->asset_type->isFleet() ? 'client.fleet.index' : 'client.assets.index')
             ->with('success', 'Asset created.');
     }
 }

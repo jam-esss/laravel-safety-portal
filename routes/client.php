@@ -4,6 +4,7 @@ use App\Http\Controllers\Client\AssetController;
 use App\Http\Controllers\Client\DashboardController;
 use App\Http\Controllers\Client\DocumentTemplateController;
 use App\Http\Controllers\Client\DocumentController;
+use App\Http\Controllers\Client\FleetController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
@@ -30,4 +31,8 @@ Route::prefix('assets')->name('assets.')->group(function () {
     Route::get('/', [AssetController::class, 'index'])->name('index');
     Route::get('/create', [AssetController::class, 'create'])->name('create');
     Route::post('/', [AssetController::class, 'store'])->name('store');
+});
+
+Route::prefix('fleet')->name('fleet.')->group(function () {
+    Route::get('/', [FleetController::class, 'index'])->name('index');
 });
