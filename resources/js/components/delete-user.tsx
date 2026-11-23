@@ -1,10 +1,10 @@
-import { Form } from '@inertiajs/react';
-import { useRef } from 'react';
+import {Form} from '@inertiajs/react';
+import {useRef} from 'react';
 import ProfileController from '@/actions/App/Http/Controllers/Settings/ProfileController';
 import Heading from '@/components/heading';
 import InputError from '@/components/input-error';
 import PasswordInput from '@/components/password-input';
-import { Button } from '@/components/ui/button';
+import {Button} from '@/components/ui/button';
 import {
     Dialog,
     DialogClose,
@@ -14,31 +14,30 @@ import {
     DialogTitle,
     DialogTrigger,
 } from '@/components/ui/dialog';
-import { Label } from '@/components/ui/label';
+import {Label} from '@/components/ui/label';
 
 export default function DeleteUser() {
     const passwordInput = useRef<HTMLInputElement>(null);
 
     return (
         <div className="space-y-6">
-            <Heading
-                variant="small"
-                title="Delete account"
-                description="Delete your account and all of its resources"
+            <Heading variant="small"
+                     title="Delete account"
             />
             <div className="space-y-4 rounded-lg border border-red-100 bg-red-50 p-4 dark:border-red-200/10 dark:bg-red-700/10">
                 <div className="relative space-y-0.5 text-red-600 dark:text-red-100">
-                    <p className="font-medium">Warning</p>
+                    <p className="font-medium">
+                        Warning
+                    </p>
                     <p className="text-sm">
-                        Please proceed with caution, this cannot be undone.
+                        After 30 days your account data will be permanently deleted.
                     </p>
                 </div>
 
                 <Dialog>
                     <DialogTrigger asChild>
-                        <Button
-                            variant="destructive"
-                            data-test="delete-user-button"
+                        <Button variant="destructive"
+                                data-test="delete-user-button"
                         >
                             Delete account
                         </Button>
@@ -48,10 +47,9 @@ export default function DeleteUser() {
                             Are you sure you want to delete your account?
                         </DialogTitle>
                         <DialogDescription>
-                            Once your account is deleted, all of its resources
-                            and data will also be permanently deleted. Please
-                            enter your password to confirm you would like to
-                            permanently delete your account.
+                            You are about to delete your account and all of its details. If you change your mind, you
+                            have 30 days to recover your account before your data is permanently deleted. If you are
+                            sure, please re-enter your password below.
                         </DialogDescription>
 
                         <Form
@@ -63,7 +61,7 @@ export default function DeleteUser() {
                             resetOnSuccess
                             className="space-y-6"
                         >
-                            {({ resetAndClearErrors, processing, errors }) => (
+                            {({resetAndClearErrors, processing, errors}) => (
                                 <>
                                     <div className="grid gap-2">
                                         <Label
@@ -81,7 +79,7 @@ export default function DeleteUser() {
                                             autoComplete="current-password"
                                         />
 
-                                        <InputError message={errors.password} />
+                                        <InputError message={errors.password}/>
                                     </div>
 
                                     <DialogFooter className="gap-2">
