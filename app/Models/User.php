@@ -16,6 +16,7 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
 use App\Enums\UserRole;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Storage;
 
 /**
  * @property int $id
@@ -40,7 +41,7 @@ class User extends Authenticatable implements MustVerifyEmail, PasskeyUser
     /**
      * Include the computed "name" whenever the user is converted to JSON.
      */
-    protected $appends = ['name'];
+    protected $appends = ['name', 'avatar'];
 
     /**
      * Virtual "name" attribute: "Jane" + "Smith" => "Jane Smith".
@@ -49,6 +50,15 @@ class User extends Authenticatable implements MustVerifyEmail, PasskeyUser
     {
         return Attribute::make(
             get: fn () => trim("{$this->first_name} {$this->last_name}"),
+        );
+    }
+
+    protected function avatar(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->avatar_path
+                ? Storage::disk('public')->url($this->avatar_path)
+                : null,
         );
     }
 
