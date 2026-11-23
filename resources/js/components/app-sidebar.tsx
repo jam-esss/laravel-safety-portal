@@ -27,6 +27,7 @@ import {
 import {dashboard} from '@/routes/client';
 import {index as templatesIndex} from '@/routes/client/templates';
 import {index as documentsIndex} from '@/routes/client/documents';
+import {index as assetsIndex} from '@/routes/client/assets';
 import type { NavItem } from '@/types';
 import FlashToaster from "@/components/flash-toaster";
 
@@ -48,7 +49,7 @@ const mainNavItems: NavItem[] = [
     },
     {
         title: 'Assets Register',
-        href: '#',
+        href: assetsIndex(),
         icon: List,
     },
     {
