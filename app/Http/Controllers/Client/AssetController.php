@@ -57,6 +57,13 @@ class AssetController extends Controller
         return $this->redirectToList($asset, 'Asset updated.');
     }
 
+    public function destroy(Asset $asset): RedirectResponse
+    {
+        $asset->delete();
+
+        return back()->with('success', 'Asset deleted.');
+    }
+
     private function rules(Request $request, ?Asset $asset = null): array
     {
         $user = $request->user();
@@ -76,6 +83,7 @@ class AssetController extends Controller
                 'max:255',
                 Rule::unique('assets', 'asset_tag')
                     ->where('company_id', $companyId)
+                    ->whereNull('deleted_at')
                     ->ignore($asset?->id),
             ],
             'serial_number' => ['nullable', 'string', 'max:255'],

@@ -33,6 +33,7 @@ Route::prefix('assets')->name('assets.')->group(function () {
     Route::post('/', [AssetController::class, 'store'])->name('store');
     Route::get('{asset}/edit', [AssetController::class, 'edit'])->name('edit');
     Route::put('{asset}', [AssetController::class, 'update'])->name('update');
+    Route::delete('{asset}', [AssetController::class, 'destroy'])->name('destroy');
 });
 
 Route::prefix('fleet')->name('fleet.')->group(function () {

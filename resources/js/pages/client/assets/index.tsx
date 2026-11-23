@@ -1,9 +1,9 @@
-import { Head, Link } from '@inertiajs/react';
-import { Pencil, Plus } from 'lucide-react';
+import {Head, Link, router} from '@inertiajs/react';
+import { Pencil, Plus, Trash2 } from 'lucide-react';
 import DataTable from '@/components/data-table';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { create, edit, index as assetIndex } from '@/routes/client/assets';
+import { create, edit, index as assetIndex, destroy } from '@/routes/client/assets';
 
 type AssetRecord = {
     id: number;
@@ -43,12 +43,28 @@ const columns = [
 
 const slots = {
     6: (_data: unknown, row: AssetRecord) => (
-        <div className="flex justify-end">
+        <div className="flex justify-end gap-2">
             <Button asChild size="sm" variant="outline">
                 <Link href={edit.url(row.id)}>
                     <Pencil />
                     Edit
                 </Link>
+            </Button>
+            <Button
+                size="sm"
+                variant="destructive"
+                onClick={() => {
+                    if (
+                        confirm(
+                            `Delete ${row.asset_tag}? It will be permanently removed after 30 days.`,
+                        )
+                    ) {
+                        router.delete(destroy.url(row.id));
+                    }
+                }}
+            >
+                <Trash2 />
+                Delete
             </Button>
         </div>
     ),
