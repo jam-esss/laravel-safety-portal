@@ -30,7 +30,6 @@ import {index as documentsIndex} from '@/routes/client/documents';
 import {index as assetsIndex} from '@/routes/client/assets';
 import {index as fleetIndex} from '@/routes/client/fleet';
 import type { NavItem } from '@/types';
-import FlashToaster from "@/components/flash-toaster";
 
 const mainNavItems: NavItem[] = [
     {
@@ -112,7 +111,6 @@ export function AppSidebar() {
                 <NavUser />
             </SidebarFooter>
 
-            <FlashToaster />
         </Sidebar>
     );
 }

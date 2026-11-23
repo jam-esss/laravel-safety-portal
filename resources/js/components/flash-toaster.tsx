@@ -1,7 +1,6 @@
 import { usePage } from '@inertiajs/react';
 import { useEffect } from 'react';
 import { toast } from 'sonner';
-import { Toaster } from '@/components/ui/sonner';
 
 type Flash = {
     success?: string | null;
@@ -21,5 +20,5 @@ export default function FlashToaster() {
         }
     }, [flash.success, flash.error]);
 
-    return <Toaster />;
+    return null;
 }
