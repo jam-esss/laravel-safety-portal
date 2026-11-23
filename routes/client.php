@@ -1,11 +1,12 @@
 <?php
 
 use App\Http\Controllers\Client\AssetController;
+use App\Http\Controllers\Client\DashboardController;
 use App\Http\Controllers\Client\DocumentTemplateController;
 use App\Http\Controllers\Client\DocumentController;
 use Illuminate\Support\Facades\Route;
 
-Route::inertia('dashboard', 'client/dashboard')->name('dashboard');
+Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
 Route::prefix('documents')->name('documents.')->group(function () {
     Route::get('/', [DocumentController::class, 'index'])->name('index');
