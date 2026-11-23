@@ -9,6 +9,7 @@ use App\Models\Asset;
 use App\Models\Company;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -17,6 +18,8 @@ class AssetController extends Controller
 {
     public function index(): Response
     {
+        Gate::authorize('viewAny', Asset::class);
+
         return Inertia::render('client/assets/index', [
             'assets' => Asset::register()->with('company:id,name')->latest()->get(),
         ]);
@@ -24,6 +27,8 @@ class AssetController extends Controller
 
     public function create(Request $request): Response
     {
+        Gate::authorize('create', Asset::class);
+
         return Inertia::render('client/assets/create', [
             'statuses' => $this->options(AssetStatus::class),
             'types' => $this->options(AssetType::class),
@@ -36,6 +41,8 @@ class AssetController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
+        Gate::authorize('create', Asset::class);
+
         $asset = Asset::create($request->validate($this->rules($request)));
 
         return $this->redirectToList($asset, 'Asset created.');
@@ -43,6 +50,8 @@ class AssetController extends Controller
 
     public function edit(Asset $asset): Response
     {
+        Gate::authorize('update', $asset);
+
         return Inertia::render('client/assets/edit', [
             'asset' => $asset,
             'statuses' => $this->options(AssetStatus::class),
@@ -52,6 +61,8 @@ class AssetController extends Controller
 
     public function update(Request $request, Asset $asset): RedirectResponse
     {
+        Gate::authorize('update', $asset);
+
         $asset->update($request->validate($this->rules($request, $asset)));
 
         return $this->redirectToList($asset, 'Asset updated.');
@@ -59,6 +70,8 @@ class AssetController extends Controller
 
     public function destroy(Asset $asset): RedirectResponse
     {
+        Gate::authorize('delete', $asset);
+
         $asset->delete();
 
         return back()->with('success', 'Asset deleted.');
