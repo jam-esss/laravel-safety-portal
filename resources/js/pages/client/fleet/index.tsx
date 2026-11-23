@@ -1,9 +1,9 @@
 import { Head, Link } from '@inertiajs/react';
-import { Plus } from 'lucide-react';
+import {Pencil, Plus} from 'lucide-react';
 import DataTable from '@/components/data-table';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { create } from '@/routes/client/assets';
+import { create, edit } from '@/routes/client/assets';
 import { index as fleetIndex } from '@/routes/client/fleet';
 
 type VehicleRecord = {
@@ -29,7 +29,28 @@ const columns = [
     { data: 'serial_number', title: 'Serial number' },
     { data: 'location', title: 'Location' },
     { data: 'status', title: 'Status' },
+    {
+        data: null,
+        title: '',
+        orderable: false,
+        searchable: false,
+        columnControl: [],
+        responsivePriority: 1,
+    },
 ];
+
+const slots = {
+    6: (_data: unknown, row: VehicleRecord) => (
+        <div className="flex justify-end">
+            <Button asChild size="sm" variant="outline">
+                <Link href={edit.url(row.id)}>
+                    <Pencil />
+                    Edit
+                </Link>
+            </Button>
+        </div>
+    ),
+};
 
 export default function Index({ vehicles }: { vehicles: VehicleRecord[] }) {
     return (
@@ -70,6 +91,7 @@ export default function Index({ vehicles }: { vehicles: VehicleRecord[] }) {
                         data={vehicles}
                         columns={columns}
                         className="display"
+                        slots={slots}
                     />
                 )}
             </div>

@@ -40,7 +40,7 @@ class Asset extends Model
         return [
             'asset_type' => AssetType::class,
             'status' => AssetStatus::class,
-            'purchase_date' => 'date',
+            'purchase_date' => 'date:Y-m-d',
             'purchase_price' => 'decimal:2',
         ];
     }

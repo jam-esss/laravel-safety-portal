@@ -1,9 +1,9 @@
 import { Head, Link } from '@inertiajs/react';
-import { Plus } from 'lucide-react';
+import { Pencil, Plus } from 'lucide-react';
 import DataTable from '@/components/data-table';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { create, index as assetIndex } from '@/routes/client/assets';
+import { create, edit, index as assetIndex } from '@/routes/client/assets';
 
 type AssetRecord = {
     id: number;
@@ -31,7 +31,28 @@ const columns = [
     { data: 'serial_number', title: 'Serial number' },
     { data: 'location', title: 'Location' },
     { data: 'status', title: 'Status' },
+    {
+        data: null,
+        title: '',
+        orderable: false,
+        searchable: false,
+        columnControl: [],
+        responsivePriority: 1,
+    },
 ];
+
+const slots = {
+    6: (_data: unknown, row: AssetRecord) => (
+        <div className="flex justify-end">
+            <Button asChild size="sm" variant="outline">
+                <Link href={edit.url(row.id)}>
+                    <Pencil />
+                    Edit
+                </Link>
+            </Button>
+        </div>
+    ),
+};
 
 export default function Index({ assets }: { assets: AssetRecord[] }) {
     return (
@@ -72,6 +93,7 @@ export default function Index({ assets }: { assets: AssetRecord[] }) {
                         data={assets}
                         columns={columns}
                         className="display"
+                        slots={slots}
                     />
                 )}
             </div>

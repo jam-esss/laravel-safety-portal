@@ -31,6 +31,8 @@ Route::prefix('assets')->name('assets.')->group(function () {
     Route::get('/', [AssetController::class, 'index'])->name('index');
     Route::get('/create', [AssetController::class, 'create'])->name('create');
     Route::post('/', [AssetController::class, 'store'])->name('store');
+    Route::get('{asset}/edit', [AssetController::class, 'edit'])->name('edit');
+    Route::put('{asset}', [AssetController::class, 'update'])->name('update');
 });
 
 Route::prefix('fleet')->name('fleet.')->group(function () {
